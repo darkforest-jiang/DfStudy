@@ -73,16 +73,45 @@ linux 学习
 
 在Linux文件系统中有两个特殊的目录，一个用户所在的工作目录，也叫当前目录，可以使用一个点 . 来表示；另一个是当前目录的上一级目录，也叫父目录，可以使用两个点 .. 来表示
 
+
+# 开启ssh 22端口
+- 查看是否安装 openssh-server，执行命令：yum list installed | grep openssh-server
+   如果有openssh-server，则是已安装
+   如果没有则需要安装，执行安装命令：yum install openssh-server 需连网
+- 打开sshd配置文件sshd_config ，执行命令：vi /etc/ssh/sshd_config 
+   - 去掉监听端口、地址前的注释 [#]：
+     Port 22 [√]
+     #AddressFamily any
+     ListenAddress 0.0.0.0
+     ListenAddress ::
+   - 开启远程登录
+     #Authentication:
+     #LoginGraceTime 2m
+     PermitRootLogin yes [√]
+     #StrictModes yes
+     #MaxAuthTries 6
+     #MaxSessions 10
+   - 开启用户密码作为连接验证，保存退出
+     PasswordAuthentication yes
+     #PermitEmptyPasswords no
+     PasswordAuthentication yes [√]
+- 开启 sshd 服务，执行命令：sudo service sshd start
+  停止SSH服务命令（service sshd stop）
+  重启SSH服务命令（service sshd restart）
+- 查看22端口是否被监听，执行命令：netstat -nltp|grep 22
+- 设置开机自启动 systemctl enable sshd
+  
 # 登录
 - ssh登录
   ssh root@192.168.1.1 回车后输入密码即可登录 linux ssh端口默认22
 
-# 常用命令
+# 基础命令
+## sudo 以管理员身份权限运行命令
+在运行其他命令前加上 sudo 即可
 
-## 基础命令
-### clear 清屏
+## clear 清屏
 
-### --help、man 查看命令帮助
+## --help、man 查看命令帮助
 - --help 查看命令帮助 格式 命令 + --help
   会在终端显示命令的详细信息
 - man 查看命令帮助 格式 man + 命令
@@ -94,12 +123,12 @@ linux 学习
   - f 显示下一屏信息
   - q 退出
 
-### history 显示历史输入命令
+## history 显示历史输入命令
 
-## 目录操作
-### pwd 显示当前目录
+# 目录/文件操作
+## pwd 显示当前目录
 
-### ls 列出目录及文件名
+## ls 列出目录及文件名
 - ls 默认会以文件名排序
   仅显示目录和文件名 不显示 . 和 .. 及以.开头的隐藏目录
 - ls a
@@ -140,7 +169,7 @@ linux 学习
 - ls -t 按时间排序
 - ls -S 按文件容量排序
 
-### cd 切换目录
+## cd 切换目录
 - cd [dirname] 进入要切换的目录
 - cd、cd ~、cd $home 进入用户主目录
 - cd / 进入根目录
@@ -148,7 +177,7 @@ linux 学习
 - cd ../.. 进入上两级目录
 - cd - 返回并进入此目录之前所在目录
 
-### mkdir 创建目录
+## mkdir 创建目录
 - mkdir [dirname] 创建目录
 - mkdir -m [dirname] 创建目录并设定权限
 - mkdir -p [dirname] 创建目录(文件存在 不报错) 直接将所需要的目录(包含上一级目录)递归创建起来
@@ -157,11 +186,11 @@ linux 学习
 - mkdir -p [dirname1]/{[dirname2],[dirname3]}/[dirname4]
   创建目录dirname1，其中包含2个目录dirname2,dirname3，这2个目录下都有一个目录dirname4
 
-### rmdir 删除空目录
+## rmdir 删除空目录
 - rmdir [dirname] 删除空目录
 - rmdir -p [dirnmae] 删除空目录 如果子目录有空 也会删除
 
-### cp 复制目录/文件
+## cp 复制目录/文件
 - cp -a [src] [dest] 等同于 cp -pdr 该选项通常在拷贝目录时使用。它保留链接、文件属性，并递归地拷贝目录，其作用等于dpR选项的组合
 - cp -p [src] [dest] 此时cp除复制源文件的内容外，还将把其修改时间和访问权限也复制到新文件中
   连同文件的属性一起复制过去，而非使用默认属性(备份常用)
@@ -172,11 +201,11 @@ linux 学习
 - cp -l [src] [dest] 进行硬式连结 (hard link) 的连结档建立，而非复制档案本身
 - cp -s [src] [dest] 复制成为符号连结文件 (symbolic link)，亦即『快捷方式』档案
 
-### mv 移动目录/文件，或修改名称
+## mv 移动目录/文件，或修改名称
 - mv -f [src] [dest] force 强制的意思，如果目标文件已经存在，不会询问而直接覆盖；
 - mv -i [src] [dest] 若目标文件 (destination) 已经存在时，就会询问是否覆盖
 
-### rm 删除目录/文件
+## rm 删除目录/文件
 - rm -i [fn] 删除的时候会提示是否确认删除，一次删除多个文件则每一个文件都会提醒
 - rm -I [fn] 一次删除多个文件（大于三个），提示消息只提示一次
 - rm -r [fn] 递归删除，用于删除目录
@@ -199,17 +228,96 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
 ## vi 命令
 - vi [fn] 进入编辑文件
 - [I] 键 进入编辑模式
-- [Esc] 键退出编辑木事
+- [Esc] 键退出编辑模式
 - [:w] 保存文件
 - [:q] 退出vi编辑
 - [:wq] 保存并退出vi编辑
 - [:q!] 不保存退出vi编辑
 - vi编辑显示 行头显示[~] 表示没有任何东西
 
-## 网络
+# 链接
+- ln -s [src] [dest] 建立软链接，类似windowns快捷方式
+  可以跨文件系统
 
-### ip 显示网卡及ip信息
-- ip a
-  显示网卡及ip信息
+# 网络
+
+## ip a 显示网卡及ip信息
+
+## ifconfig  显示网络配置信息 网卡 ip dns mask等信息
+
+# 网络配置
+- 实体机
+  - ip a 命令查看网卡信息
+  - 修改网路设置配置文件
+    ifcfg-eth0 是配置文件名称 eth0 是你网卡的名称 即 ip a 输出的env开头的
+    vi /etc/sysconfig/network-scripts/ifcfg-eth0
+    按 [i] 键进入编辑模式
+    以下字段没有则回车添加：
+    BOOTPROTO=static
+    DNS1=本机首选DNS
+    DNS2=本机备用DNS
+    ONBOOT=yes
+    IPADDR=设置的IP
+    NETMASK=子网掩码
+    GATEWAT=网关
+
+    按 ESC 键退出编辑模式
+    输入  :wq 退出保存
+    输入  :q! 退出不保存
+  - systemctl restart network 重启网卡
+  - ifconfig 查看网络配置信息
+
+- 虚拟机
+  - 桥接模式 默认使用网卡Vmnet0 不提供 DHCP 服务
+    虚拟机与外部主机在同一个网段上，相当于一个主机 既能与局域网内的主机通讯，也能与外部网络通信
+    需要设置ip dns等网络配置信息 跟主机一样 ip换一个即可 配置方式参照上边[实体机]设置
+  - NAT模式 默认使用 VMnet8，提供 DHCP 服务
+    可以与物理机互相访问，也可访问外部网络 不能访问局域内其他机器 不会与局域网内其他 ip 地址发生冲突
+    相当于虚拟机自己建了个局域网 可以与主机通信
+    一班情况虚拟机可以ping通主机 主机可能ping不同虚拟机
+    主机ping不同虚拟机解决办法：
+    - 控制面板->网络和Internet->网络和共享中心->更改适配器设置->VMnet8网卡右键 属性->点 [配置]->
+      高级->属性->Jumbo Packet->右边选择 Enable 启用
+    - 网上有人说是不在一个网段造成的 需要把VMnet8网卡右键属性中的ipv4设置跟虚拟机一个网段即可
+      但是自己试了 貌似是不行的 没准是自己设置错了
+
+# yum 安装软件包(需联网)
+- 基于 RPM 包管理，能够从指定的服务器自动下载 RPM 包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软件包，
+  无须繁琐地一次次下载、安装。
+  yum 提供了查找、安装、删除某一个、一组甚至全部软件包的命令，而且命令简洁而又好记。
+- 格式 yum [opitons] [command] [package]
+- [opitons] -h:帮助 -y:当安装过程提示选择全部为 "yes" -q:不显示安装过程
+- yum search [keyword] 查找软件包
+- yum install [package] 安装软件包
+- yum remove [package] 删除软件包
+- yum check-update 列出所有可更新的软件清单命
+- yum update 更新所有软件
+- 清除缓存命令
+  - yum clean packages: 清除缓存目录下的软件包
+  - yum clean headers: 清除缓存目录下的 headers
+  - yum clean oldheaders: 清除缓存目录下旧的 headers
+  - yum clean, yum clean all (= yum clean packages; yum clean oldheaders) :清除缓存目录下的软件包及旧的 headers
+
+# systemctl 服务管理
+- systemctl status [service] 显示服务详细信息
+- systemctl is-active [service] 仅显示是否Active
+- systemctl is-enable [service] 显示服务是否开机启动
+- systemctl enable [service] 使服务自启动
+- systemctl disable [service] 使服务不自动启动
+- systemctl list-units --type=service 显示所有已启动服务
+- systemctl start [service] 启动服务
+- systemctl stop [service] 停止服务
+- systemctl restart [service] 重启服务
+- systemctl reload [service] 重载服务
+- systemctl mask [service] 注销服务
+- systemctl unmask [service] 取消注销服务
+
+# firewalld 防火墙
+- systemctl status firewalld 查看防火墙状态
+- systemctl start firewalld 启动防火墙
+- systemctl stop firewalld 关闭防火墙
+- firewall-cmd --list-ports 查看已开放端口
+- firewall-cmd --zone=public --add-port=5000/tcp --permanent 添加端口 permanent表示永远存在 否则重启后就没有了
+- firewall-cmd --reload 重启防火墙 添加端口号后需重启
 
 # end

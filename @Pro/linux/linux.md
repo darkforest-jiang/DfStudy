@@ -320,4 +320,7 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
 - firewall-cmd --zone=public --add-port=5000/tcp --permanent 添加端口 permanent表示永远存在 否则重启后就没有了
 - firewall-cmd --reload 重启防火墙 添加端口号后需重启
 
+# 进程
+-  ps  -aux | grep dotnet
+
 # end

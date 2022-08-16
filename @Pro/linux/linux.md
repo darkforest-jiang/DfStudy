@@ -106,6 +106,8 @@ linux 学习
   ssh root@192.168.1.1 回车后输入密码即可登录 linux ssh端口默认22
 
 # 基础命令
+## su 切换用户
+
 ## sudo 以管理员身份权限运行命令
 在运行其他命令前加上 sudo 即可
 
@@ -321,6 +323,30 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
 - firewall-cmd --reload 重启防火墙 添加端口号后需重启
 
 # 进程
--  ps  -aux | grep dotnet
 
+## ps 显示当前进程的状态，类似于 windows 的任务管理器。
+-  ps  -aux | grep dotnet 显示所有包含其他使用者的进程 |grep + 检索 检索关键字
+  输出格式 USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND
+  USER: 行程拥有者
+  PID: pid
+  %CPU: 占用的 CPU 使用率
+  %MEM: 占用的记忆体使用率
+  VSZ: 占用的虚拟记忆体大小
+  RSS: 占用的记忆体大小
+  TTY: 终端的次要装置号码 (minor device number of tty)
+  STAT: 该行程的状态:
+    D: 无法中断的休眠状态 (通常 IO 的进程)
+    R: 正在执行中
+    S: 静止状态
+    T: 暂停执行
+    Z: 不存在但暂时无法消除
+    W: 没有足够的记忆体分页可分配
+    <: 高优先序的行程
+    N: 低优先序的行程
+    L: 有记忆体分页分配并锁在记忆体内 (实时系统或捱A I/O)
+  START: 行程开始时间
+  TIME: 执行的时间
+  COMMAND:所执行的指令
+- ps -ef | grep 进程关键字   查找指定进程 跟 ps -aux|grep 进程关键字   差不多
+  
 # end

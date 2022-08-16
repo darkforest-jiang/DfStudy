@@ -1,11 +1,12 @@
-安装 .netcore sdk
+安装 .netcore 部署linux
 [toc]
 
-# 微软官网下载linux 安装包
+# 安装.netcoresdk
+## 微软官网下载linux 安装包
 
-# ftp工具上传至linux服务器 
+## ftp工具上传至linux服务器 
 
-# linux系统下安装 .netcoresdk
+## linux系统下安装 .netcoresdk
 - mkdir -p /usr/local/dotnet 创建dotnet安装目录 
   [-p] 指创建目录时 没有则创建 有了不报错
   /usr 目录是用户应用程序安装目录
@@ -27,3 +28,25 @@
 - systemctl stop firewalld 关闭防火墙
 - firewall-cmd --zone=public --add-port=5000/tcp --permanent 添加端口 permanent表示永远存在 否则重启后就没有了
 - firewall-cmd --reload 重启防火墙 添加端口号后需重启
+
+# windows系统下使用命令发布.net core 程序
+- 前提是
+- 启动 [dos]/[powershell]窗口
+- [cd] 切换到要发布项目的文件夹下，也就是项目.csproj文件的所在目录
+- 也可以在此目录下 [Shirft] + [鼠标右键] 启动powershell
+- 使用命令 dotnet publish -c Release -r [运行时] --no-self-contained -o [指定发布目录]  发布
+  例如：
+   dotnet publish -c Release -r linux-x64 --no-self-contained -o E:\Code\SVN\Trunk\API\CesaLeagueService\CesaLeagueService\bin\Release\net6.0\publish
+  - [-c] : 定义生成配置 Debug 或 Release 不加的话 默认Debug
+  - [-f] : 指定目标框架，选项有netcoreapp2.2，netcoreapp3.0，netcoreapp3.1 net6.0。如果要发布与项目文件.csproj文件TargetFramework不一样的版本，这里就需显示指定一下
+  - [-r] : 指定运行时 win-x86 win-x64 win-arm win-arm64 osx-x64 linux-x64 linux-arm
+  - [--no-self-contained] ：不使用框架依赖 即不打包.netcore运行环境 则必须在部署机器上安装.netcore运行环境
+    [--self-contained] ：使用框架依赖 即打包.netcore运行环境 部署机器上可以不安装运行环境直接运行
+  - [-o] : 指定发布目录
+    如果不指定位置，默认在当前目录的bin目录下。如果发布成Self-Contained ，则在 ./bin/[configuration]/[framework]/[runtime]/publish/ 。否则就在 /bin/[configuration]/[framework]/publish/
+    [configuration] Debug Release
+    [framework] net6.0 netcoreapp2.2
+    [runtime] 运行时 win-x86 win-x64 win-arm win-arm64 osx-x64 linux-x64 linux-arm
+
+
+  

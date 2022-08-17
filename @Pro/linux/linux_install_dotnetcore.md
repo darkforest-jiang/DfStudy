@@ -29,8 +29,46 @@
 - firewall-cmd --zone=public --add-port=5000/tcp --permanent 添加端口 permanent表示永远存在 否则重启后就没有了
 - firewall-cmd --reload 重启防火墙 添加端口号后需重启
 
+# systemd方式部署启动服务
+- https://docs.microsoft.com/zh-cn/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-6.0#code-try-7
+- cd /usr/lib/systemd/system 进入用户服务配置文件夹
+- vi myApi.service 新建service文件
+- 编辑service文件
+  [Unit]
+  #描述
+  Description=myApiService runat 1004
+  After=network.target remote-fs.target nss-lookup.target
+
+  [Service]
+  #工作目录
+  WorkingDirectory=/app/api/LeagueService
+  #启动时执行的命令
+  ExecStart=/usr/bin/dotnet /app/api/LeagueService/CesaLeagueService.dll --urls http://*:1004
+  #只有出错时重启，Restart=always表示无论什么原因造成服务停止都会重启
+  Restart=on-failure #服务崩溃时，十秒钟重启一次
+  # Restart service after 10 seconds if the dotnet service crashes:
+  RestartSec=10
+  KillSignal=SIGINT
+  SyslogIdentifier=CesaLeagueService
+  Environment=ASPNETCORE_ENVIRONMENT=Development
+  Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+  [Install]
+  #该服务所在的target
+  #这里符号链接放在/usr/lib/systemd/system/multi-user.target.wants目录下
+  WantedBy=multi-user.target
+  
+- [Esc] [:wa] 退出保存
+- 服务启动
+  - systemctl start myApi 启动服务
+  - systemctl stop myApi 停止服务
+  - systemctl restart myApi 重启服务
+  - systemctl enable myApi 开机自启
+  - systemctl disable myApi 开机不自启
+  - systemctl status myApi 查看服务状态
+
+
 # windows系统下使用命令发布.net core 程序
-- 前提是
 - 启动 [dos]/[powershell]窗口
 - [cd] 切换到要发布项目的文件夹下，也就是项目.csproj文件的所在目录
 - 也可以在此目录下 [Shirft] + [鼠标右键] 启动powershell

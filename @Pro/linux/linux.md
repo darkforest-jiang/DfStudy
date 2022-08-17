@@ -348,5 +348,33 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
   TIME: 执行的时间
   COMMAND:所执行的指令
 - ps -ef | grep 进程关键字   查找指定进程 跟 ps -aux|grep 进程关键字   差不多
-  
+
+# tar/zip 压缩/解压缩
+  linux 默认支持格式 [.gz] [.bz2] [.zip]
+  - [.gz] 压缩率低 时间快 相对[.bz2]
+  - [.bz2] 压缩率高 时间长 相对[.gz]
+  - [.gz] [.bz2] 需要使用[tar]命令压缩/解压缩
+  - [.zip] 需要使用[zip]压缩 [unzip]解压缩
+## tar
+- 格式：tar [必要参数] [选择参数] [文件]
+- 命令选项
+  - [-c] 创建打包文件
+  - [-v] 显示打包或者解包的纤细信息
+  - [-f] 指定文件名称 必须放到所有选项后面
+  - [-z] 压缩或解压缩(.gz)
+  - [-i] 压缩或解压缩(.bz2)
+  - [-x] 解包
+  - [-C] 解压缩到指定目录
+- 压缩[.gz] tar -zcvf test.tar.gz *.txt
+- 解压缩[.gz]  tar -zxvf test.tar.gz -C /root/testtar
+  [-C]指定解压目录 如果不指定则默认当前目录
+- 压缩[.bz2] tar -icvf test.bz2 *.txt
+- 解压缩[.bz2] tar -ixvf test.bz2 -C /root/testtar
+  [-C]指定解压目录 如果不指定则默认当前目录
+
+## zip/unzip
+- 压缩[zip] zip test.zip *.txt
+- 解压缩[zip] unzip test.zip -d /root/testtar
+  [-d] 解压缩到指定目录 不指定默认当前目录
+
 # end

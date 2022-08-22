@@ -67,6 +67,8 @@
   - systemctl disable myApi 开机不自启
   - systemctl status myApi 查看服务状态
 
+# supervisord 部署启动.netcore
+- 
 
 # windows系统下使用命令发布.net core 程序
 - 启动 [dos]/[powershell]窗口

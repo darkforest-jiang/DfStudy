@@ -68,7 +68,30 @@
   - systemctl status myApi 查看服务状态
 
 # supervisord 部署启动.netcore
-- 
+- cd /etc/supervisord.d 进入supervisord.d 目录
+- vi myApi.ini 创建.netcore服务配置文件
+  #配置程序名称
+  [program:MyApi]
+  #运行程序的命令
+  command=dotnet TestApi.dll
+  #命令执行的目录
+  directory=/root/testapi
+  #进程环境变量
+  environment=ASPNETCORE_ENVIRONMENT=Development
+  #进程执行的用户身份
+  user=root
+  #进程停止信号，可以为TERM, HUP, INT, QUIT, KILL, USR1, or USR2等信号默认为TERM >。当用设定的信号去干掉进程，退出码会被认为是expected，非必须设置
+  stopsignal=INT
+  #如果是true的话，子进程将在supervisord启动后被自动启动，默认就是true，非必须设置
+  autostart=true
+  #这个是设置子进程挂掉后自动重启的情况，有三个选项，false,unexpected和true。如果>为false的时候，无论什么情况下，都不会被重新启动，如果为unexpected，只有当进程的>退出码不在下面的exitcodes里面定义的退出码的时候，才会被自动重启。当为true的时候>>，只要子进程挂掉，将会被无条件的重启
+  autorestart=true
+  #这个选项是子进程启动多少秒之后，此时状态如果是running，则我们认为启动成功了,默认值为1，非必须设置
+  startsecs=1
+  #错误日志文件
+  stderr_logfile=/root/testapi/supervisor.err.log
+  #输出日志文件
+  stdout_logfile=/root/testapi/supervisor.out.log
 
 # windows系统下使用命令发布.net core 程序
 - 启动 [dos]/[powershell]窗口

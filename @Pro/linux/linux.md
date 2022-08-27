@@ -283,6 +283,12 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
     - 网上有人说是不在一个网段造成的 需要把VMnet8网卡右键属性中的ipv4设置跟虚拟机一个网段即可
       但是自己试了 貌似是不行的 没准是自己设置错了
 
+# 查看软件包是否暗转
+- rpm：rpm -qa | grep dotnet
+- den：dpkg -l | grep dotnet
+- yum：yum list installed | grep dotnet
+- 其它方式安装的：whereis dotnet ，whereis 命令用于查找文件
+
 # yum 安装软件包(需联网)
 - 基于 RPM 包管理，能够从指定的服务器自动下载 RPM 包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软件包，
   无须繁琐地一次次下载、安装。

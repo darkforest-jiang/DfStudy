@@ -58,7 +58,7 @@
   #这里符号链接放在/usr/lib/systemd/system/multi-user.target.wants目录下
   WantedBy=multi-user.target
   
-- [Esc] [:wa] 退出保存
+- [Esc] [:wq] 退出保存
 - 服务启动
   - systemctl start myApi 启动服务
   - systemctl stop myApi 停止服务

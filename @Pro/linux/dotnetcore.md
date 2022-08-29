@@ -69,12 +69,12 @@
 
 # supervisord 部署启动.netcore
 - cd /etc/supervisord.d 进入supervisord.d 目录
-- vi myApi.ini 创建.netcore服务配置文件
+- vi myApi.ini 创建.netcore服务配置文件[注意：如何是复制进去的请务必使用ANSI编码的文本]
   #配置程序名称
   [program:MyApi]
   #运行程序的命令
-  command=dotnet TestApi.dll
-  #命令执行的目录
+  command=dotnet TestApi.dll --urls http://*:5000
+  #命令执行的目录 可以不见，则上边命令必须使用相对路径
   directory=/root/testapi
   #进程环境变量
   environment=ASPNETCORE_ENVIRONMENT=Development
@@ -92,6 +92,23 @@
   stderr_logfile=/root/testapi/supervisor.err.log
   #输出日志文件
   stdout_logfile=/root/testapi/supervisor.out.log
+- supervisord -c /etc/supervisord.conf 启动supervisor
+  - 报错1：Error: File contains no section headers
+    可能是上边创建的myApi.ini文件文本编码不是[ANSI]编码导致的，复制的话先保存成[ANSI]编码的再复制粘贴
+  - 报错2：Error: Another program is already listening on a port that one of our HTTP servers is configured to use.  Shut this program down first before starting supervisord.
+    有其它进程占用 查找初进程 kill掉即可
+    ps -aux | grep supervisord
+    kill 9
+  - 报错3：Unlinking stale socket /var/run/supervisor/supervisor.sock
+    unlink /var/run/supervisor/supervisor.sock
+- 服务配置文件 myApi.ini 文件修改后需要重新加载 supervisorctl reload
+- supervisorctl 管理命令
+  - supervisorctl start all 启动所有进程
+  - supervisorctl restart all 重启所有进程
+  - supervisorctl start [服务名] 启动某个服务
+  - supervisorctl stop [服务名] 停止某个服务
+  - supervisorctl restart [服务名] 重启某个服务
+  - supervisorctl status 查看supervisor所有进程运行状态 
 
 # windows系统下使用命令发布.net core 程序
 - 启动 [dos]/[powershell]窗口

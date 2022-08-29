@@ -42,4 +42,4 @@
 - supervisorctl status 查看supervisor所有进程运行状态 
 
 # supervisor 设置自启动
-
+- cd /usr/lib/systemd/system 进入服务目录

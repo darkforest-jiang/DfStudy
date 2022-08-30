@@ -46,7 +46,7 @@
   ExecStart=/usr/bin/dotnet /app/api/LeagueService/CesaLeagueService.dll --urls http://*:1004
   #只有出错时重启，Restart=always表示无论什么原因造成服务停止都会重启
   Restart=on-failure #服务崩溃时，十秒钟重启一次
-  # Restart service after 10 seconds if the dotnet service crashes:
+  #Restart service after 10 seconds if the dotnet service crashes:
   RestartSec=10
   KillSignal=SIGINT
   SyslogIdentifier=CesaLeagueService
@@ -92,6 +92,7 @@
   stderr_logfile=/root/testapi/supervisor.err.log
   #输出日志文件
   stdout_logfile=/root/testapi/supervisor.out.log
+
 - supervisord -c /etc/supervisord.conf 启动supervisor
   - 报错1：Error: File contains no section headers
     可能是上边创建的myApi.ini文件文本编码不是[ANSI]编码导致的，复制的话先保存成[ANSI]编码的再复制粘贴
@@ -109,6 +110,7 @@
   - supervisorctl stop [服务名] 停止某个服务
   - supervisorctl restart [服务名] 重启某个服务
   - supervisorctl status 查看supervisor所有进程运行状态 
+- 配置supervisord为开机自启（详细见[supervisor.md]）
 
 # windows系统下使用命令发布.net core 程序
 - 启动 [dos]/[powershell]窗口

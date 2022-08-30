@@ -33,7 +33,10 @@
 - supervisor -v 查看版本号
 
 # supervisorctl 管理命令
+- supervisorctl 打开supervisord控制终端 下边的命令就不用前边 + [supervisorctl]
+  exit 退出终端
 - supervisorctl reload 重新加载配置文件并重启服务
+- supervisorctl update 更新新的配置到supervisord
 - supervisorctl start all 启动所有进程
 - supervisorctl restart all 重启所有进程
 - supervisorctl start [服务名] 启动某个服务
@@ -43,3 +46,22 @@
 
 # supervisor 设置自启动
 - cd /usr/lib/systemd/system 进入服务目录
+- vi supervisord.service 新建supervisord服务配置文件，内容如下，注意使用ANSI编码文字
+[Unit]
+Description=Process Monitoring and Control Daemon
+After=rc-local.service nss-user-lookup.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/supervisord -c /etc/supervisord.conf
+ExecStop=/usr/bin/supervisorctl shutdown
+ExecReload=/usr/bin/supervisorctl reload
+KillMode=process
+Restart=on-failure
+RestartSec=42
+
+[Install]
+WantedBy=multi-user.target
+
+- systemctl enable supervisord 设置服务自启动
+- systemctl is-enable supervisord 查看是否为开机自启

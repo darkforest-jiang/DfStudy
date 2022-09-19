@@ -283,28 +283,11 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
     - 网上有人说是不在一个网段造成的 需要把VMnet8网卡右键属性中的ipv4设置跟虚拟机一个网段即可
       但是自己试了 貌似是不行的 没准是自己设置错了
 
-# 查看软件包是否暗转
+# 查看软件包是否安装
 - rpm：rpm -qa | grep dotnet
 - den：dpkg -l | grep dotnet
 - yum：yum list installed | grep dotnet
 - 其它方式安装的：whereis dotnet ，whereis 命令用于查找文件
-
-# yum 安装软件包(需联网)
-- 基于 RPM 包管理，能够从指定的服务器自动下载 RPM 包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软件包，
-  无须繁琐地一次次下载、安装。
-  yum 提供了查找、安装、删除某一个、一组甚至全部软件包的命令，而且命令简洁而又好记。
-- 格式 yum [opitons] [command] [package]
-- [opitons] -h:帮助 -y:当安装过程提示选择全部为 "yes" -q:不显示安装过程
-- yum search [keyword] 查找软件包
-- yum install [package] 安装软件包
-- yum remove [package] 删除软件包
-- yum check-update 列出所有可更新的软件清单命
-- yum update 更新所有软件
-- 清除缓存命令
-  - yum clean packages: 清除缓存目录下的软件包
-  - yum clean headers: 清除缓存目录下的 headers
-  - yum clean oldheaders: 清除缓存目录下旧的 headers
-  - yum clean, yum clean all (= yum clean packages; yum clean oldheaders) :清除缓存目录下的软件包及旧的 headers
 
 # systemctl 服务管理
 - systemctl status [service] 显示服务详细信息

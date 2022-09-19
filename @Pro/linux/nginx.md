@@ -45,7 +45,14 @@ nginx安装部署使用
 - 停止 /usr/local/nginx/sbin/nginx -s stop (quit)
 - 重启 /usr/local/nginx/sbin/nginx -s reload
 - 查看端口占用 netstat -tunlp
-- netstat -tunlp
+
+# nginx配置
+配置文件 /usr/local/nginx/conf/nginx.conf
+server配置
+http{
+  server
+}
+
 
 # 默认启动端口是80 注意端口占用 访问地址：192.168.43.6:80
 

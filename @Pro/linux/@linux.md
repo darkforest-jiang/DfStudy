@@ -302,7 +302,7 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
 - systemctl reload [service] 重载服务
 - systemctl mask [service] 注销服务
 - systemctl unmask [service] 取消注销服务
-
+  
 # firewalld 防火墙
 - systemctl status firewalld 查看防火墙状态
 - systemctl start firewalld 启动防火墙

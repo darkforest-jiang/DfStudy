@@ -46,11 +46,76 @@ nginx安装部署使用
 - 重启 /usr/local/nginx/sbin/nginx -s reload
 - 查看端口占用 netstat -tunlp
 
+# nginx 设置开机启动
+- cd /usr/lib/systemd/system 进入服务配置文件路径
+- vi nginx.service 创建nginx服务配置文件
+  [Unit]
+  Description=nginx service
+  After=network.target
+
+  [Service]
+  Type=forking
+  ExecStart=/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+  ExecReload=/usr/local/nginx/sbin/nginx -s reload
+  ExecStop=/usr/local/nginx/sbin/nginx -s stop
+  PrivateTmp=true
+
+  [Install]
+  WantedBy=multi-user.target
+- [esc]键退出编辑 [:wq]保存退出
+- systemctl enable nginx 设置开机启动
+- systemctl disable nginx 取消开机启动
+
 # nginx配置
 配置文件 /usr/local/nginx/conf/nginx.conf
 server配置
 http{
-  server
+  listen       5000;
+  server_name  myApiGateWay;
+  
+  location / {
+    root   html;
+    index  index.html index.htm;
+  }
+
+  # 反向代理
+  # 一个地址转发
+  location /weatherforecast {
+    proxy_pass http://localhost:5000;
+  }
+  # 匹配多个路径转发到同一个地址写法
+  location ~ ^/(路径1|路径2|路径3|路径4|路径5) {
+        proxy_pass  跳转的地址;
+        proxy_set_header $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header x-tif-uid $http_x_tif_uid;
+        proxy_connect_timeout 600;
+        proxy_read_timeout 600;
+        proxy_send_timeout 600;
+        proxy_ignore_client_abort on;
+        proxy_next_upstream timeout;
+  }
+
+  # 负载均衡配置
+  # 轮询方式
+  upstream webServer {
+    server 192.168.233.80:80; //服务器Aip
+    server 192.168.233.90:80; //服务器Bip
+  }
+  # 权重方式
+  upstream webServer {
+    server 192.168.233.80:80 weight=3; //服务器Aip
+    server 192.168.233.90:80 weight=7; //服务器Bip
+  }
+  server{
+    listen 5000;
+    server_name myapi;
+    location / {
+      index  index.html index.htm;
+      proxy_pass http://webServer; //【webServer】和upstream 【webServer】名字一致
+    }
+  }
+
 }
 
 

@@ -3,6 +3,7 @@ docker
 
 # 简介
 官网：https://www.docker.com/
+
 Docker 分为 CE 和 EE 两大版本。CE 即社区版（免费，支持周期 7 个月）
 - EE 即企业版，强调安全，付费使用，支持周期 24 个月。
 - Docker CE 分为 stable test 和 nightly 三个更新频道。 官方网站上有各种环境下的安装指南，这里主要介绍
@@ -21,6 +22,15 @@ ln -s /root/data/docker /var/lib/docker --快捷方式
 
 之前使用的CentOS8由于停止维护了，这意味着无法再使用新版本的软件包更新了，由于Docker 支持 64 位版本 CentOS 7，并且要求内核版本不低于 3.10， CentOS 7 满足最低内核的要求，所以我们在CentOS 7安装Docker。
 查看内核版本号 Linux 3.10.0-327.el7.x86_64 x86_64
+
+# 注意事项、安装问题
+- docker默认使用iptables防火墙 
+  linux请先安装 yum install iptables,
+  安装后停止firewalld systemctl stop firewalld、 systemctl disable firewalld
+- docker启动失败解决方法
+  - systemctl status docker.service 查看原因
+  - journalctl -xe 先输入启动命令 然后使用系统日志命令查看具体出错原因 
+    
 
 # 卸载旧版本的docker
 yum remove docker \

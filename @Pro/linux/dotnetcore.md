@@ -130,5 +130,10 @@
     [framework] net6.0 netcoreapp2.2
     [runtime] 运行时 win-x86 win-x64 win-arm win-arm64 osx-x64 linux-x64 linux-arm
 
+# linux使用gdi+需要安装libgdiplus
+官网：https://www.mono-project.com/docs/gui/libgdiplus/
+
+# end
+
 
   

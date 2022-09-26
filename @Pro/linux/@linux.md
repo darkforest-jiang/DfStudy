@@ -303,13 +303,25 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
 - systemctl mask [service] 注销服务
 - systemctl unmask [service] 取消注销服务
   
-# firewalld 防火墙
+# 防火墙
+## firewalld防火墙
 - systemctl status firewalld 查看防火墙状态
 - systemctl start firewalld 启动防火墙
 - systemctl stop firewalld 关闭防火墙
+- systemctl mask firewalld 禁用防火墙
 - firewall-cmd --list-ports 查看已开放端口
 - firewall-cmd --zone=public --add-port=5000/tcp --permanent 添加端口 permanent表示永远存在 否则重启后就没有了
 - firewall-cmd --reload 重启防火墙 添加端口号后需重启
+
+## iptables防火墙
+- yum install -y iptables 在线安装
+- 离线安装 在centos安装包下packages下找rpm包安装即可
+- iptables -L -n 查看现有规则
+- iptables -P INPUT ACCEPT 先允许所有,不然有可能会杯具
+- iptables -F 清空所有默认规则
+- iptables -X 清空所有自定义规则
+- iptables -A INPUT -p tcp --dport 22 -j ACCEPT 开放端口
+- service iptables save 保存上述规则
 
 # 进程
 

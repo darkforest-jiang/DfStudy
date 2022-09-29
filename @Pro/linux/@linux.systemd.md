@@ -32,7 +32,7 @@ systemd服务管理
 # systemctl服务管理命令
 - systemctl status [service] 显示服务详细信息
 - systemctl is-active [service] 仅显示是否Active
-- systemctl is-enable [service] 显示服务是否开机启动
+- systemctl is-enabled [service] 显示服务是否开机启动
 - systemctl enable [service] 使服务自启动
 - systemctl disable [service] 使服务不自动启动
 - systemctl list-units --type=service 显示所有已启动服务

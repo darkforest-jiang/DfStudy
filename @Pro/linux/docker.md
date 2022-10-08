@@ -160,14 +160,44 @@ StartLimitInterval=60s
 
 [Install]
 WantedBy=multi-user.target
-- 启动、停止docker
-  systemctl start docker
-  systemctl stop docker
-- docker version 验证安装
+
+# docker命令
+- docker version 验证安装,docker启动后执行该命令会输出以下内容 Client、Servier信息：
+  Client: Docker Engine - Community
+ Version:           20.10.18
+ API version:       1.41
+ Go version:        go1.18.6
+ Git commit:        b40c2f6
+ Built:             Thu Sep  8 23:14:08 2022
+ OS/Arch:           linux/amd64
+ Context:           default
+ Experimental:      true
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          20.10.18
+  API version:      1.41 (minimum version 1.12)
+  Go version:       go1.18.6
+  Git commit:       e42327a
+  Built:            Thu Sep  8 23:12:21 2022
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.6.8
+  GitCommit:        9cd3357b7fd7218e4aec3eae239db1f68a5a6ec6
+ runc:
+  Version:          1.1.4
+  GitCommit:        v1.1.4-0-g5fd4c4d
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+  
+- systemctl start docker 启动
+  systemctl stop docker 停止
+- 
 
 # 启动报错解决
-- 
-  SELINUX=enforcing
+
 
 # docker常用命令
 - docker ps 查询容器

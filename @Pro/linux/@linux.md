@@ -311,17 +311,58 @@ Linux系统没有回收站，rm删除就永远找不到了，特别是不要用 
 - systemctl mask firewalld 禁用防火墙
 - firewall-cmd --list-ports 查看已开放端口
 - firewall-cmd --zone=public --add-port=5000/tcp --permanent 添加端口 permanent表示永远存在 否则重启后就没有了
-- firewall-cmd --reload 重启防火墙 添加端口号后需重启
+- firewall-cmd --zone=public --remove-port=5000/tcp --permanent 移除端口
+- firewall-cmd --list-services 查看开放的服务
+- firewall-cmd --add-service=https --permanent 添加https服务
+- firewall-cmd --remove-service=https --permanent 移除https服务
+- firewall-cmd --reload 重启防火墙 修改规则后需重启
 
 ## iptables防火墙
+### 介绍
+iptables 是集成在 Linux 内核中的包过滤防火墙系统。使用 iptables 可以添加、删除具体的过滤规则，iptables 默认维护着 4 个表和 5 个链，所有的防火墙策略规则都被分别写入这些表与链中。
+
+“四表”是指 iptables 的功能，默认的 iptables规则表有 filter 表（过滤规则表）、nat 表（地址转换规则表）、mangle（修改数据标记位规则表）、raw（跟踪数据表规则表）：
+  filter 表：控制数据包是否允许进出及转发，可以控制的链路有 INPUT、FORWARD 和 OUTPUT。
+  nat 表：控制数据包中地址转换，可以控制的链路有 PREROUTING、INPUT、OUTPUT 和 POSTROUTING。
+  mangle：修改数据包中的原数据，可以控制的链路有 PREROUTING、INPUT、OUTPUT、FORWARD 和 POSTROUTING。
+  raw：控制 nat 表中连接追踪机制的启用状况，可以控制的链路有 PREROUTING、OUTPUT。
+“五链”是指内核中控制网络的 NetFilter 定义的 5 个规则链。每个规则表中包含多个数据链：
+  INPUT（入站数据过滤）： 进来的数据包应用此规则链中的策略
+  OUTPUT（出站数据过滤）：外出的数据包应用此规则链中的策略
+  FORWARD（转发数据过滤）：转发数据包时应用此规则链中的策略
+  PREROUTING（路由前过滤）：对数据包作路由选择前应用此链中的规则（所有的数据包进来的时侯都先由这个链处理）
+  POSTROUTING（路由后过滤）：对数据包作路由选择后应用此链中的规则（所有的数据包出来的时侯都先由这个链处理）
+防火墙规则需要写入到这些具体的数据链中。
+
+防火墙过滤框架:
+  -> [PREROUTING] -> [路由决策] -> [FORWARD] -> [POSTROUTING]
+                         ↓                           ↑
+                     [INPUT] -> [LocalProcess] -> [OUTPUT]
+可以看出，如果是外部主机发送数据包给防火墙本机，数据将会经过 PREROUTING 链与 INPUT 链；如果是防火墙本机发送数据包到外部主机，数据将会经过 OUTPUT 链与 POSTROUTING 链；如果防火墙作为路由负责转发数据，则数据将经过 PREROUTING 链、FORWARD 链以及 POSTROUTING 链。
+————————————————
+版权声明：本文为CSDN博主「一口Linux」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/daocaokafei/article/details/115091313
+
+### 命令
 - yum install -y iptables 在线安装
 - 离线安装 在centos安装包下packages下找rpm包安装即可
-- iptables -L -n 查看现有规则
-- iptables -P INPUT ACCEPT 先允许所有,不然有可能会杯具
-- iptables -F 清空所有默认规则
+- iptables -V 验证安装
+- iptables -nL --line-number 查看现有规则(列出序号)
+- 链管理
+  iptables -P [INPUT] ACCEPT/DROP 设置默认策略打开/关闭
+  [INPUT] 链名，共五链 INPUT OUTPUT FORWARD PREROUTING POSTROUTING
+- iptables -F 清空所有规则，只留下默认规则
 - iptables -X 清空所有自定义规则
-- iptables -A INPUT -p tcp --dport 22 -j ACCEPT 开放端口
-- service iptables save 保存上述规则
+- 规则管理
+  iptables [-A] [INPUT] [-s] 192.18.1.100/16 [-p] tcp --dport 22 [-j] Accept
+  - [-A] 在当前链最后追加一条规则
+    [-l num] 从位置num处插入规则，从1开始，num即为 -nL --line-number显示的序号
+    [-R num] 修改第几条规则
+    [-D num] 删除第几条规则
+  - [INPUT] 链名，共五链 INPUT OUTPUT FORWARD PREROUTING POSTROUTING 
+  - [-s] 来源IP网段或IP地址，这里指来源于网络号为192.18.1.100掩码为255.255.0.0的地址。
+  - [-p] 规则应用在那个协议上，这里“-p tcp”即应用规则在tcp协议上，还有其他协议tcp等
+  - [-j] 代表将要应用的规则，这里“-j DROP”即将要丢弃数据。其他的动作还有ACCEPT接受，REJECT拒绝等
 
 # 进程
 

@@ -261,6 +261,12 @@ Server: Docker Engine - Community
   - systemctl restart network
 - systemctl restart docker 重启docker
 
+# docker可视化 portainer
+- docker search portainer |head -n -3
+- docker pull portainer/portainer
+- docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+- http://localhost:9000 创建用户 第一次创建完需重启portainer容器 第二次继续创建即可
+
 # 删除
 - 删除安装包 yum remove docker-ce
 - 删除镜像、容器、配置文件等内容

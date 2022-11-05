@@ -25,7 +25,7 @@ ln -s /root/data/docker /var/lib/docker --快捷方式
 
 # 注意事项、安装问题
 - docker默认使用iptables防火墙 
-  linux请先安装 yum install iptables,
+  linux请先安装 yum install iptables, yum install iptables-services
   安装后停止firewalld systemctl stop firewalld、 systemctl disable firewalld
 - docker启动失败解决方法
   - systemctl status docker.service 查看原因
@@ -194,14 +194,72 @@ Server: Docker Engine - Community
   
 - systemctl start docker 启动
   systemctl stop docker 停止
-- 
 
 # 启动报错解决
 
+# 构建docker镜像 容器中运行
+- 在软件发布后的文件夹下编写Dockerfile文件 以.net6 webApi 发布docker为例
+  #配置基本镜像
+  FROM mcr.microsoft.com/dotnet/aspnet:6.0
+  #配置工作目录
+  WORKDIR /app
+  #暴露端口(即监听宿主机端口转发至docker)
+  EXPOSE 5000
+  #复制发布文件
+  COPY . /app
+  #设置进入点
+  ENTRYPOINT ["dotnet", "TestApi.dll"]
+- cd 到发布文件夹
+- docker build -t df.myapi.docker .     构建镜像 注意以 空格+. 结尾，镜像名称只能小写
+- docker run --name=mydocker -p 5000:80 -d df.myapi.docker 指定在某个容器下运行 默认网桥模式
+  前面是容器名称 -p指定容器运行的端口 最后是镜像名称
+  容器会监听宿主机5000端口映射到docker容器80端口
+- curl http://localhost:5000/weatherforecast 测试接口
+  如果报错 curl: (56) Recv failure: Connection reset by peer 
+  解决办法：
+  (1)可以加上 --net=host 启动直接使用宿主机ip
+  - docker run --name=mydocker -p 80:80 -d --net=host df.myapi.docker
+  --net=host 容器直接使用宿主服务器的ip，这样开发用的物理机就能够访问这个容器的接口了
+  (2) 重建docker0网桥 参考后边重建网桥
+ 
+- 每次更新程序后需要依次执行以下命令(可以制作成shell脚本一键执行)
+  1. 停止容器
+  2. 删除容器
+  3. 删除镜像
+  4. 构建镜像
+  5. 在指定容器中运行
 
 # docker常用命令
-- docker ps 查询容器
-- docker
+- docker ps 列出所有正在运行的容器
+- docker ps -a 列出所有容器（包括已停止的容器）
+- docker start 容器名称或Id 启动某个容器
+- docker stop 容器名称或Id 停止某个容器
+- docker rm 容器名称或Id 删除某个容器
+- docker images 列出所有镜像
+- docker rmi 镜像名称或Id 删除某个镜像
+- docker exec -it [容器] /bin/bash  进入容器内部
+
+# curl报错 curl: (56) Recv failure: Connection reset by peer 解决： 重建网桥docker0
+- 安装网桥包 yum install bridge-utils -y
+- 重建网桥
+  #停止docker
+  systemctl stop docker
+  pkill docker
+  #停用网卡
+  ip link set dev docker0 down
+  #删除docker0网桥
+  brctl delbr docker0
+  #增加docker0网桥
+  brctl addbr docker0
+  #增加网卡
+  ip addr add 172.16.10.1/24 dev docker0
+  #启用网卡
+  ip link set dev docker0 up
+- 开启宿主机的ipv4转发功能
+  - sysctl net.ipv4.ip_forward 查看 1-开启 0-未开启
+  - vi /etc/sysctl.conf 添加一行 net.ipv4.ip_forward = 1
+  - systemctl restart network
+- systemctl restart docker 重启docker
 
 # 删除
 - 删除安装包 yum remove docker-ce

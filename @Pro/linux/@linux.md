@@ -345,6 +345,7 @@ iptables 是集成在 Linux 内核中的包过滤防火墙系统。使用 iptabl
 
 ### 命令
 - yum install -y iptables 在线安装
+- yum install iptables-services 安装服务
 - 离线安装 在centos安装包下packages下找rpm包安装即可
 - iptables -V 验证安装
 - iptables -nL --line-number 查看现有规则(列出序号)

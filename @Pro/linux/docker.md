@@ -99,39 +99,39 @@ Requires=docker.socket containerd.service
 
 [Service]
 Type=notify
-# the default is not to use systemd for cgroups because the delegate issues still
-# exists and systemd currently does not support the cgroup feature set required
-# for containers run by docker
+#the default is not to use systemd for cgroups because the delegate issues still
+#exists and systemd currently does not support the cgroup feature set required
+#for containers run by docker
 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 ExecReload=/bin/kill -s HUP $MAINPID
 TimeoutSec=0
 RestartSec=2
 Restart=always
 
-# Note that StartLimit* options were moved from "Service" to "Unit" in systemd 229.
-# Both the old, and new location are accepted by systemd 229 and up, so using the old location
-# to make them work for either version of systemd.
+#Note that StartLimit* options were moved from "Service" to "Unit" in systemd 229.
+#Both the old, and new location are accepted by systemd 229 and up, so using the old location
+#to make them work for either version of systemd.
 StartLimitBurst=3
 
-# Note that StartLimitInterval was renamed to StartLimitIntervalSec in systemd 230.
-# Both the old, and new name are accepted by systemd 230 and up, so using the old name to make
-# this option work for either version of systemd.
+#Note that StartLimitInterval was renamed to StartLimitIntervalSec in systemd 230.
+#Both the old, and new name are accepted by systemd 230 and up, so using the old name to make
+#this option work for either version of systemd.
 StartLimitInterval=60s
 
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
+#Having non-zero Limit*s causes performance problems due to accounting overhead
+#in the kernel. We recommend using cgroups to do container-local accounting.
 LimitNOFILE=infinity
 LimitNPROC=infinity
 LimitCORE=infinity
 
-# Comment TasksMax if your systemd version does not support it.
-# Only systemd 226 and above support this option.
+#Comment TasksMax if your systemd version does not support it.
+#Only systemd 226 and above support this option.
 TasksMax=infinity
 
-# set delegate yes so that systemd does not reset the cgroups of docker containers
+#set delegate yes so that systemd does not reset the cgroups of docker containers
 Delegate=yes
 
-# kill only the docker process, not all processes in the cgroup
+#kill only the docker process, not all processes in the cgroup
 KillMode=process
 OOMScoreAdjust=-500
 
@@ -271,5 +271,8 @@ Server: Docker Engine - Community
 - 删除安装包 yum remove docker-ce
 - 删除镜像、容器、配置文件等内容
   rm -rf /var/lib/docker docker默认位置 /var/log/docker
+
+# docker compose 容器编排
+
 
 # end

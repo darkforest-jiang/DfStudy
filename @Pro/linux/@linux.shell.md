@@ -25,6 +25,14 @@ chmod +x ./my.sh 设置脚本具有执行权限
 /bin/sh my.sh
 直接运行解释器，其参数是shell脚本文件名，不需要在脚本第一行指定解释器，指定也无效
 
+# 输入输出
+- read a 读取输入变量 a
+- echo $a 输出变量 a
+- echo "this is echo"
+- echo "\"this is echo\"" 显示转义字符
+- echo -e "first line \n second line" 开启转义
+- echo `date` 显示linux命令执行结果
+
 # shell 变量
 fn="my.sh" 变量名和等号之间不能有空格
 类型有数字、字符串、数组
@@ -62,29 +70,139 @@ echo ${fn}
   单引号中的任何字符都会原样输出，其中的变量无效
   单引号中不能出现单独的一个单引号，对单引号使用转义字符也是不行的，但可以成对出现，作为拼接字符串使用
 
-## 获取字符串长度
+### 获取字符串长度
 fn="my.sh"
 echo ${#fn} 输出5
 当变量为数组时 ${#fn} 等价于 ${#fn[0]}
 
-## 提取子字符串
+### 提取子字符串
 fn="my.sh"
 echo ${fn:1:2} 从第2个字符开始截取2个 输出 y.
 第一个索引为：0
 
-## 查找子字符串
+### 查找子字符串
 fn="my.sh"
 echo `expr index "${fn}" ys' 
 查找 y 或 s 的位置(哪个先出现就计算哪个)  输出 2, 输出的索引从 1 开始
 
 ## shell数组
 数组下标从 0 开始
-fns=(1,2,3,4,5) #定义数组
-echo ${fns}
-fns[1]=100  #赋值某个位置的值
+fns=(1 2 3 4 5) #定义数组
 echo ${fns[4]} #读取某个位置的值
-echo ${fns[@]} #读物数组所有元素
+fns[1]=100  #赋值某个位置的值
+echo ${fns[@]} 或 echo ${fns[*]}  #读取数组所有元素
+echo ${#fns[*]} #获取数组元素个数
 
+# shell运算符
+a=10
+b=4
+echo "a + b = `expr $a + $b`"
+echo "a - b = `expr $a - $b`"
+echo "a * b = `expr $a \* $b`"
+echo "a / b = `expr $a / $b`"
+echo "a % b = `expr $a % $b`"
 
+# shell流程控制
+## 条件判断
+- [ 条件 ]
+  前后必须有空格
+  [ $a -gt $b ]  a>b
+  不可以直接使用 > = < >= <=
+  - -gt >
+  - -lt <
+  - -eq ==
+  - ge >=
+  - le <=
+- (( 条件 ))
+  前后必须有空格
+  (( $a>$b )) 可以直接使用 > = < >= <=
 
+## if else
+a=10
+b=4
+if [ $a -gt $b ] #大于
+then
+    echo "a > b"
+elif [ $a -lt $b ] #小于
+then
+    echo "a < b"
+elif [ $a -eq $b ]
+then
+    echo "a = b"
+else
+    echo "null"
+fi
+
+## for循环
+for item in 1 2 4 10 3
+do
+  echo $item
+  if [ $item -ge 10 ]
+  then
+      echo ">="
+      break
+  else
+      echo "<"
+      continue
+  fi
+done
+
+strs=("this" "is" "my" "shell")
+for item in ${strs[*]}
+do
+  echo $item
+done
+
+## while循环 不能使用[]
+a=10
+while(( $a >= 5 ))
+do
+  echo $a
+  a=`expr $a - 1`
+done
+
+## until循环 直到条件=true时停止 与while相反
+a=10
+until(( $a <= 5 ))
+do
+  echo $a
+  a=`expr $a - 1`
+done
+
+## case 语句
+read a
+case $a in
+ 1) echo "李白";;
+ 2) echo "苏轼";;
+ *) echo "输错了";;
+esac
+
+# shell函数
+fun1(){
+  echo "无返回值"
+}
+fun2(){
+  echo "第一个参数为 $1 !"
+    echo "第二个参数为 $2 !"
+    echo "第十个参数为 $10 !"
+    echo "第十个参数为 ${10} !"
+    echo "第十一个参数为 ${11} !"
+    echo "参数总数有 $# 个!"
+    echo "作为一个字符串输出所有参数 $* !"
+  return $1
+}
+
+fun1
+
+fun2 1 2 3 4 5 6 7 8 9 10 11
+echo $?
+
+- $10 不能获取第十个参数，获取第十个参数需要${10}。当n>=10时，需要使用${n}来获取参数。
+- $#	传递到脚本或函数的参数个数
+- $*	以一个单字符串显示所有向脚本传递的参数
+- $$	脚本运行的当前进程ID号
+- $!	后台运行的最后一个进程的ID号
+- $@	与$*相同，但是使用时加引号，并在引号中返回每个参数。
+- $-	显示Shell使用的当前选项，与set命令功能相同。
+- $?	函数返回值
 

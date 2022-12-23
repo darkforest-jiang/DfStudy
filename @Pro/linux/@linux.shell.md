@@ -178,6 +178,7 @@ case $a in
 esac
 
 # shell函数
+[注意]：shell 语言中 0 代表 true，0 以外的值代表 false。
 fun1(){
   echo "无返回值"
 }

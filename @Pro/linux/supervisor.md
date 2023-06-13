@@ -64,4 +64,4 @@ RestartSec=42
 WantedBy=multi-user.target
 
 - systemctl enable supervisord 设置服务自启动
-- systemctl is-enable supervisord 查看是否为开机自启
+- systemctl is-enabled supervisord 查看是否为开机自启

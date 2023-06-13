@@ -267,6 +267,19 @@ Server: Docker Engine - Community
 - docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
 - http://localhost:9000 创建用户 第一次创建完需重启portainer容器 第二次继续创建即可
 
+## 重置密码
+- 停止portainer容器
+- find / -name portainer.key
+- docker run --rm -v /var/lib/docker/volumes/portainer_data/_data:/data portainer/helper-reset-password
+- 会出现以下提示文本 会提示用户名和密码
+  2023/06/10 09:39:18 Password successfully updated for user: admin
+  2023/06/10 09:39:18 Use the following password to login: 5tcL1h*^8wHl63X/OrW9s(JMG][~F40-
+- 重启 portainer 容器
+- 按提示的 用户名 和 密码 登录
+- 登录后修改密码即可 新版最少12位 ...
+- 我的默认账户： admin   adminadminadmin
+
+
 # 删除
 - 删除安装包 yum remove docker-ce
 - 删除镜像、容器、配置文件等内容

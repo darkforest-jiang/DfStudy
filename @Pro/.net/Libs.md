@@ -9,6 +9,10 @@
 ## SkiaSharp .NET 平台的跨平台 2D 图形 API
 - SkiaSharp
 
+## VulkanSharp
+
+## Unity
+
 # 人脸识别
 ## OpenCvSharp
 
@@ -21,6 +25,8 @@
 
 # Pdf
 ## PdfSharp
+
+## PDFtoImage
 
 # 唯一Id
 ## NanoId
@@ -49,6 +55,6 @@
 ## Autofac
 
 # 微信支付
-# SKIT.FlurlHttpClient.Wechat.TenpayV3
+## SKIT.FlurlHttpClient.Wechat.TenpayV3
 
 

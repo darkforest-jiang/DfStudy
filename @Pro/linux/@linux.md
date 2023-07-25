@@ -105,6 +105,9 @@ linux 学习
 - ssh登录
   ssh root@192.168.1.1 回车后输入密码即可登录 linux ssh端口默认22
 
+## 登录后主机名显示为 bogon
+hostname root
+
 # 基础命令
 ## su 切换用户
 

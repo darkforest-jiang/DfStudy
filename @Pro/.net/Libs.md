@@ -57,4 +57,15 @@
 # 微信支付
 ## SKIT.FlurlHttpClient.Wechat.TenpayV3
 
+# 数据库
+## orm
+- ef
+- dapper
+- sqlsugar
+
+## redis
+- StackExchange.Redis
+- FreeRedis
+- NewLife.Redis
+
 

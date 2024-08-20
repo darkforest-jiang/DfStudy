@@ -63,6 +63,9 @@
 - dapper
 - sqlsugar
 
+## 分库分表
+- ef分库分表 ShardingCore
+
 ## redis
 - StackExchange.Redis
 - FreeRedis

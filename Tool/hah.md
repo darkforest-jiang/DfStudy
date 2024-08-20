@@ -42,10 +42,10 @@ CSDN：https://www.csdn.net/
 
 # 找书籍
 书栈网（极力推荐）：https://www.bookstack.cn/
-码农之家（计算机电子书下载）：www.xz577.com
-鸠摩搜书：www.jiumodiary.com
-云海电子图书馆：www.pdfbook.cn
-周读（书籍搜索）：ireadweek.com
+码农之家（计算机电子书下载）：https://www.xz577.com
+鸠摩搜书：https://www.jiumodiary.com
+云海电子图书馆：https://www.pdfbook.cn
+周读（书籍搜索）：https://ireadweek.com
 知轩藏书：http://www.zxcs.me/
 脚本之家电子书下载：https://www.jb51.net/books/
 搜书VIP-电子书搜索：http://www.soshuvip.com/all.html
